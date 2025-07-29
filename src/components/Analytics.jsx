@@ -11,7 +11,7 @@ const Analytics = () => {
   const [categoryData, setCategoryData] = useState([])
   const [trendsData, setTrendsData] = useState([])
   const [paymentMethodData, setPaymentMethodData] = useState([])
-  const [selectedMonth, setSelectedMonth] = useState('')
+  const [selectedMonth, setSelectedMonth] = useState('all')
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
 
@@ -30,7 +30,7 @@ const Analytics = () => {
       }
 
       // Fetch category data
-      const categoryUrl = selectedMonth 
+      const categoryUrl = selectedMonth !=="all"
         ? `/api/metrics/category?month=${selectedMonth}`
         : '/api/metrics/category'
       const categoryResponse = await fetch(categoryUrl)
@@ -113,7 +113,7 @@ const Analytics = () => {
               <SelectValue placeholder="All months" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All months</SelectItem>
+              <SelectItem value="all">All months</SelectItem>
               {getMonthOptions().map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
