@@ -10,9 +10,9 @@ import { Search, Filter, Trash2, Receipt, Calendar, DollarSign } from 'lucide-re
 
 const ExpenseList = ({ expenses, onDeleteExpense, loading }) => {
   const { toast } = useToast()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('')
-  const [monthFilter, setMonthFilter] = useState('')
+  const [searchTerm, setSearchTerm] = useState('__all__')
+  const [categoryFilter, setCategoryFilter] = useState('__all__')
+  const [monthFilter, setMonthFilter] = useState('__all__')
 
   const categories = [...new Set(expenses.map(expense => expense.category))].sort()
   const months = [...new Set(expenses.map(expense => expense.date.slice(0, 7)))].sort().reverse()
@@ -20,8 +20,8 @@ const ExpenseList = ({ expenses, onDeleteExpense, loading }) => {
   const filteredExpenses = expenses.filter(expense => {
     const matchesSearch = expense.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          expense.category.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = !categoryFilter || expense.category === categoryFilter
-    const matchesMonth = !monthFilter || expense.date.startsWith(monthFilter)
+    const matchesCategory = categoryFilter==="__all__" || expense.category === categoryFilter
+    const matchesMonth = monthFilter==="__all__" || expense.date.startsWith(monthFilter)
     
     return matchesSearch && matchesCategory && matchesMonth
   })
@@ -121,7 +121,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, loading }) => {
                 <SelectValue placeholder="All categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All categories</SelectItem>
+                <SelectItem value="__all__">All categories</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -136,7 +136,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, loading }) => {
                 <SelectValue placeholder="All months" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All months</SelectItem>
+                <SelectItem value="__all__">All months</SelectItem>
                 {months.map((month) => (
                   <SelectItem key={month} value={month}>
                     {new Date(month + '-01').toLocaleDateString('en-US', { 
